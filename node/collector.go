@@ -10,7 +10,6 @@ import (
 
 var (
 	procRoot = "/proc"
-
 	infoDesc = prometheus.NewDesc(
 		"node_info",
 		"Meta information about the node",
@@ -164,6 +163,7 @@ func NewCollector(hostname, kernelVersion string) *Collector {
 
 func (c *Collector) Collect(ch chan<- prometheus.Metric) {
 	ch <- gauge(infoDesc, 1, c.hostname, c.kernelVersion)
+	LibvirtSetup(flags.GetString(flags.LibvirtURI), ch)
 
 	v, err := uptime(procRoot)
 	if err != nil {
